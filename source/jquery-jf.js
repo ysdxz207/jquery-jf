@@ -1,11 +1,22 @@
-;
-(function ($) {
 
+
+(function($) {
     var defaultOptions = {
 
         fontSize: '20'
     };
-    $.fn.jf = function () {
+    var jf = {
+        collapse: function(el) {
+
+        },
+        expand: function(el) {
+
+        },
+        toggle: function(el) {
+
+        }
+    };
+    return $.fn.jf = function() {
         var _this = $(this);
         var json = arguments[0],
             options = arguments[1];
@@ -26,7 +37,5 @@
             return;
         }
 
-
-    }
-
-})(jQuery)
+    };
+})(jQuery);
