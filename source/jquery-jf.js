@@ -9,10 +9,11 @@
         var _this = $(this);
         var json = arguments[0],
             options = arguments[1];
-        $.extend(defaultOptions, options);
+        $.fn.extend(defaultOptions, options);
 
+        console.log(defaultOptions)
         _this.css('opacity', '0');
-        _this.css('font-size', options['fontSize'] + 'px')
+        _this.css('font-size', defaultOptions['fontSize'] + 'px')
 
         if (json == null) {
             try {
@@ -21,6 +22,11 @@
                 console.error('非json格式')
             }
         }
+        if (json == null) {
+            return;
+        }
+
+
     }
 
 })(jQuery)
