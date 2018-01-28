@@ -59,7 +59,7 @@
                 for (var i = 0; i < json.length; ++i) {
                     html += '<li>';
                     if (isCollapsable(json[i])) {
-                        html += '<a href class="json-toggle"></a>';
+                        html += '<a href class="json-toggle-btn"></a>';
                     }
                     html += json2html(json[i], options);
                     if (i < json.length - 1) {
@@ -83,7 +83,7 @@
                         var keyRepr = options.withQuotes ?
                             '<span class="json-key">"' + key + '"</span>' : '<span class="json-key">' + key + '</span>';
                         if (isCollapsable(json[key])) {
-                            html += '<i class="json-toggle-btn fa fa-caret-down"><hr></i><span class="json-key">' + keyRepr + '</span>';
+                            html += '<i class="json-toggle-btn"><hr></i><span class="json-key">' + keyRepr + '</span>';
                         }
                         else {
                             html += keyRepr;
@@ -132,7 +132,7 @@
                 return;
             }
         }
-        _this.html('<a href class="json-root json-toggle">JSON</a>')
+        _this.html('<i class="json-toggle-btn"><hr></i><span class="json-root">ROOT</span>')
 
         return this.each(function() {
             var html = json2html(json, defaultOptions);
