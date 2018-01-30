@@ -2,6 +2,7 @@ $(function () {
 
     $('body').jf(null, {
 
-        collapsed: false
+        collapsed: false,
+        showImg: false
     });
 });

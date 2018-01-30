@@ -39,10 +39,16 @@
 
         if (typeof json === 'string') {
             json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            if (isUrl(json))
-                html += '<a href="' + json + '" class="json-value json-link" target="_blank"><img src="'+json + '" onerror="javascript:$(this).remove()">" ' + json + '"</a>';
-            else
+            if (isUrl(json)) {
+                html += '<a href="' + json + '" class="json-value json-link" target="_blank">';
+                if (defaultOptions.showImg) {
+                    html += '<img src="'+json + '" onerror="javascript:this.parentNode.removeChild(this)">"';
+                }
+                html += json + '"</a>';
+
+            } else {
                 html += '<span class="json-value json-string">"' + json + '"</span>';
+            }
         }
         else if (typeof json === 'number') {
             html += '<span class="json-value json-number">' + json + '</span>';
