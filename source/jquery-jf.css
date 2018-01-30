@@ -107,8 +107,7 @@ ul.json-dict, ol.json-array {
 
 .json-link>img {
     display: none;
-    position: relative;
+    position: absolute;
     z-index: 1;
-    top: 0px;
-    left: 0px;
+    float: left;
 }

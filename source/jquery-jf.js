@@ -164,10 +164,19 @@
                 $(this).find('.json-toggle-btn').click();
             }
 
-            $('.json-link').hover(function () {
-                console.log('show')
-                $(this).find('img').show(400);
-            });
+
+            if (defaultOptions.showImg) {
+
+                $('.json-link').bind('mouseover', function () {
+                    var img = $(this).find('img');
+                    img.css('left', window.event.clientX + window.document.body.scrollLeft + 6);
+                    img.css('top', window.event.clientY + window.document.body.scrollLeft + 6);
+                    img.show(400);
+                }).bind('mouseout', function () {
+                    var img = $(this).find('img');
+                    img.hide(100);
+                });
+            }
         });
 
     };
