@@ -40,7 +40,7 @@
         if (typeof json === 'string') {
             json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             if (isUrl(json))
-                html += '<a href="' + json + '" class="json-value json-link" target="_blank"><img src="'+json + '">" ' + json + '</a>';
+                html += '<a href="' + json + '" class="json-value json-link" target="_blank"><img src="'+json + '" onerror="javascript:$(this).remove()">" ' + json + '"</a>';
             else
                 html += '<span class="json-value json-string">"' + json + '"</span>';
         }
