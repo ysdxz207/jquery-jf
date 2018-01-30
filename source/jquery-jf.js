@@ -40,7 +40,7 @@
         if (typeof json === 'string') {
             json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             if (isUrl(json))
-                html += '<a href="' + json + '" class="json-value json-link" target="_blank">' + json + '</a>';
+                html += '<a href="' + json + '" class="json-value json-link" target="_blank"><img src="'+json + '">" ' + json + '</a>';
             else
                 html += '<span class="json-value json-string">"' + json + '"</span>';
         }
@@ -163,6 +163,11 @@
             if (defaultOptions.collapsed == true) {
                 $(this).find('.json-toggle-btn').click();
             }
+
+            $('.json-link').hover(function () {
+                console.log('show')
+                $(this).find('img').show(400);
+            });
         });
 
     };
