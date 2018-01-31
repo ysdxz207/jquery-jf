@@ -50,7 +50,7 @@
 .json-key {
     color: #44aa00;
     font-weight: bold;
-    cursor: pointer;
+    cursor: copy;
 }
 
 
@@ -110,4 +110,13 @@ ul.json-dict, ol.json-array {
     position: absolute;
     z-index: 1;
     float: left;
+}
+
+.json-main .tip {
+    position: fixed;
+    left: 500px;
+    top: 200px;
+    z-index: 2;
+    padding: 10px 30px;
+    border: 1px solid red;
 }

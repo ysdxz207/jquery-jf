@@ -1,4 +1,4 @@
-
+var TimeFn = null;
 
 (function($) {
     var defaultOptions = {
@@ -24,6 +24,38 @@
         },
         toggle: function(el) {
 
+        },
+        copyJson: function (clickObj, type) {
+            var key = clickObj.text(),
+                value = clickObj.parent().find('.json-value').text(),
+                tempClickObj = $('<div></div>');
+            var clipboard = new Clipboard(tempClickObj[0], {
+                text: function() {
+                    if (type === 'key') {
+                        type = key;
+                    } else if (type === 'value') {
+                        type = value;
+                    }
+                    return type;
+                }
+            });
+
+            clipboard.on('success', function(e) {
+                jf.tip('复制成功');
+            });
+
+            clipboard.on('error', function(e) {
+                console.log(e);
+            });
+
+            tempClickObj.click();
+            clipboard.destroy();
+        },
+        tip: function (text, timeout) {
+            var tipEle = $('<div class="tip">' + text + '</div>');
+            tipEle.appendTo('body');
+            tipEle.show(500);
+            tipEle.delay(timeout || 1000).hide(500);
         }
     };
 
@@ -40,7 +72,7 @@
         if (typeof json === 'string') {
             json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             if (isUrl(json)) {
-                html += '<a href="' + json + '" class="json-value json-link" target="_blank">';
+                html += '<a href="' + json + '" class="json-value json-link" target="_blank">"';
                 if (defaultOptions.showImg) {
                     html += '<img src="'+json + '" onerror="javascript:this.parentNode.removeChild(this)">"';
                 }
@@ -87,7 +119,7 @@
                     if (json.hasOwnProperty(key)) {
                         html += '<li>';
                         var keyRepr = options.withQuotes ?
-                            '<span class="json-key">"' + key + '"</span>' : '<span class="json-key">' + key + '</span>';
+                            '<span class="json-key" title="单击复制key,双击复制value">"' + key + '"</span>' : '<span class="json-key" title="单击复制key,双击复制value">' + key + '</span>';
                         if (isCollapsable(json[key])) {
                             html += '<i class="json-toggle-btn"><hr></i><span class="json-key">' + keyRepr + '</span>';
                         }
@@ -183,7 +215,28 @@
                     img.hide(100);
                 });
             }
+
+
+
+            $('.json-key').bind('click', function () {
+                var $this = $(this);
+                // 取消上次延时未执行的方法
+                clearTimeout(TimeFn);
+                //执行延时
+                TimeFn = setTimeout(function(){
+                    //do function在此处写单击事件要执行的代码
+                    jf.copyJson($this, 'key');
+                },300);
+
+            });
+            $('.json-key').bind('dblclick', function () {
+                // 取消上次延时未执行的方法
+                clearTimeout(TimeFn);
+                jf.copyJson($(this), 'value');
+            });
         });
 
     };
+
+
 })(jQuery);
