@@ -118,8 +118,10 @@ ul.json-dict, ol.json-array {
     top: 40%;
     z-index: 2;
     padding: 10px 20px;
-    border: 1px solid #00e3a5;
-    border-radius: 10px;
-    background-color: #67f978;
+    border: 1px solid #0fff99;
+    background-color: #98ffa1;
     color: #FFFFFF;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 }
