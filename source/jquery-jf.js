@@ -1,6 +1,6 @@
 var TimeFn = null;
 
-(function($) {
+(function ($) {
     var defaultOptions = {
 
         fontSize: '14',
@@ -10,137 +10,139 @@ var TimeFn = null;
         showImg: true
     };
     var jf = {
-        show: function (e1) {
-            e1.fadeIn(200);
-        },
-        hide: function (e1) {
-            e1.hide();
-        },
-        collapse: function(el) {
+            show: function (e1) {
+                e1.fadeIn(200);
+            },
+            hide: function (e1) {
+                e1.hide();
+            },
+            collapse: function (el) {
 
-        },
-        expand: function(el) {
+            },
+            expand: function (el) {
 
-        },
-        toggle: function(el) {
+            },
+            toggle: function (el) {
 
-        },
-        copyJson: function (clickObj, type) {
-            var key = clickObj.text(),
-                value = clickObj.parent().find('.json-value').text(),
-                tempClickObj = $('<div></div>');
-            var clipboard = new Clipboard(tempClickObj[0], {
-                text: function() {
-                    if (type === 'key') {
-                        type = key;
-                    } else if (type === 'value') {
-                        type = value;
-                    }
-                    return type;
-                }
-            });
+            },
+            json2html: function (json, options) {
+                var html = '';
 
-            clipboard.on('success', function(e) {
-                jf.tip('复制成功');
-            });
-
-            clipboard.on('error', function(e) {
-                console.log(e);
-            });
-
-            tempClickObj.click();
-            clipboard.destroy();
-        },
-        tip: function (text, timeout) {
-            var tipEle = $('<div class="tip">' + text + '</div>');
-            tipEle.appendTo('body');
-            tipEle.show(500);
-            tipEle.delay(timeout || 1000).hide(500);
-        }
-    };
-
-    function isCollapsable(arg) {
-        return arg instanceof Object && Object.keys(arg).length > 0;
-    };
-    function isUrl(string) {
-        var regexp = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-        return regexp.test(string);
-    };
-    function json2html(json, options) {
-        var html = '';
-
-        if (typeof json === 'string') {
-            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            if (isUrl(json)) {
-                html += '<a href="' + json + '" class="json-value json-link" target="_blank">"';
-                if (defaultOptions.showImg) {
-                    html += '<img src="'+json + '" onerror="javascript:this.parentNode.removeChild(this)">"';
-                }
-                html += json + '"</a>';
-
-            } else {
-                html += '<span class="json-value json-string">"' + json + '"</span>';
-            }
-        }
-        else if (typeof json === 'number') {
-            html += '<span class="json-value json-number">' + json + '</span>';
-        }
-        else if (typeof json === 'boolean') {
-            html += '<span class="json-value json-boolean">' + json + '</span>';
-        }
-        else if (json === null) {
-            html += '<span class="json-value json-null">null</span>';
-        }
-        else if (json instanceof Array) {
-            if (json.length > 0) {
-                html += '[<ol class="json-value json-array">';
-                for (var i = 0; i < json.length; ++i) {
-                    html += '<li>';
-                    if (isCollapsable(json[i])) {
-                        html += '<a href class="json-toggle-btn"></a>';
-                    }
-                    html += json2html(json[i], options);
-                    if (i < json.length - 1) {
-                        html += ',';
-                    }
-                    html += '</li>';
-                }
-                html += '</ol>]';
-            }
-            else {
-                html += '[]';
-            }
-        }
-        else if (typeof json === 'object') {
-            var key_count = Object.keys(json).length;
-            if (key_count > 0) {
-                html += '{<ul class="json-dict">';
-                for (var key in json) {
-                    if (json.hasOwnProperty(key)) {
-                        html += '<li>';
-                        var keyRepr = options.withQuotes ?
-                            '<span class="json-key" title="单击复制key,双击复制value">"' + key + '"</span>' : '<span class="json-key" title="单击复制key,双击复制value">' + key + '</span>';
-                        if (isCollapsable(json[key])) {
-                            html += '<i class="json-toggle-btn"><hr></i><span class="json-key">' + keyRepr + '</span>';
+                if (typeof json === 'string') {
+                    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    if (jf.isUrl(json)) {
+                        html += '<a href="' + json + '" class="json-value json-link" target="_blank">"';
+                        if (defaultOptions.showImg) {
+                            html += '<img src="' + json + '" onerror="javascript:this.parentNode.removeChild(this)">"';
                         }
-                        else {
-                            html += keyRepr;
-                        }
-                        html += ': ' + json2html(json[key], options);
-                        if (--key_count > 0)
-                            html += ',';
-                        html += '</li>';
+                        html += json + '"</a>';
+
+                    } else {
+                        html += '<span class="json-value json-string">"' + json + '"</span>';
                     }
                 }
-                html += '</ul>}';
-            } else {
-                html += '{}';
+                else if (typeof json === 'number') {
+                    html += '<span class="json-value json-number">' + json + '</span>';
+                }
+                else if (typeof json === 'boolean') {
+                    html += '<span class="json-value json-boolean">' + json + '</span>';
+                }
+                else if (json === null) {
+                    html += '<span class="json-value json-null">null</span>';
+                }
+                else if (json instanceof Array) {
+                    if (json.length > 0) {
+                        html += '[<ol class="json-value json-array">';
+                        for (var i = 0; i < json.length; ++i) {
+                            html += '<li>';
+                            if (jf.isCollapsable(json[i])) {
+                                html += '<a href class="json-toggle-btn"></a>';
+                            }
+                            html += jf.json2html(json[i], options);
+                            if (i < json.length - 1) {
+                                html += ',';
+                            }
+                            html += '</li>';
+                        }
+                        html += '</ol>]';
+                    }
+                    else {
+                        html += '[]';
+                    }
+                }
+                else if (typeof json === 'object') {
+                    var key_count = Object.keys(json).length;
+                    if (key_count > 0) {
+                        html += '{<ul class="json-dict">';
+                        for (var key in json) {
+                            if (json.hasOwnProperty(key)) {
+                                html += '<li>';
+                                var keyRepr = options.withQuotes ?
+                                    '<span class="json-key" title="单击复制key,双击复制value,右键复制json">"' + key + '"</span>' : '<span class="json-key" title="单击复制key,双击复制value,右键复制json">' + key + '</span>';
+                                if (jf.isCollapsable(json[key])) {
+                                    html += '<i class="json-toggle-btn"><hr></i><span class="json-key">' + keyRepr + '</span>';
+                                }
+                                else {
+                                    html += keyRepr;
+                                }
+                                html += ': ' + jf.json2html(json[key], options);
+                                if (--key_count > 0)
+                                    html += ',';
+                                html += '</li>';
+                            }
+                        }
+                        html += '</ul>}';
+                    } else {
+                        html += '{}';
+                    }
+                }
+                return html;
+            },
+            isCollapsable: function (arg) {
+                return arg instanceof Object && Object.keys(arg).length > 0;
+            },
+            isUrl: function (string) {
+                var regexp = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+                return regexp.test(string);
+            }
+            ,
+            copyJson: function (clickObj, type) {
+                var key = clickObj.text(),
+                    value = clickObj.parent().find('.json-value').text(),
+                    tempClickObj = $('<div></div>');
+                var clipboard = new Clipboard(tempClickObj[0], {
+                    text: function () {
+                        if (type === 'key') {
+                            return key;
+                        } else if (type === 'value') {
+                            return value;
+                        }
+                        return key;
+                    }
+                });
+
+                clipboard.on('success', function (e) {
+                    jf.tip('复制' + type + '成功');
+                });
+
+                clipboard.on('error', function (e) {
+                    console.log(e);
+                });
+
+                tempClickObj.click();
+                clipboard.destroy();
+            }
+            ,
+            tip: function (text, timeout) {
+                var tipEle = $('<div class="tip">' + text + '</div>');
+                tipEle.appendTo('body');
+                tipEle.show(500);
+                tipEle.delay(timeout || 1000).fadeOut(500);
             }
         }
-        return html;
-    }
+    ;
 
-    return $.fn.jf = function() {
+    $.fn.jf = function () {
 
 
         var _this = $(this);
@@ -152,7 +154,7 @@ var TimeFn = null;
         if (json == null) {
             try {
                 json = JSON.parse(_this.text());
-            } catch(e) {
+            } catch (e) {
                 jf.show(_this);
                 return;
             }
@@ -165,15 +167,15 @@ var TimeFn = null;
         if (typeof json === 'string') {
             try {
                 json = JSON.parse(json);
-            } catch(e) {
+            } catch (e) {
                 jf.show(_this);
                 return;
             }
         }
         _this.html('<i class="json-toggle-btn"><hr></i><span class="json-root">ROOT</span>')
 
-        return this.each(function() {
-            var html = json2html(json, defaultOptions);
+        return this.each(function () {
+            var html = jf.json2html(json, defaultOptions);
             _this.css('font-size', defaultOptions.fontSize + 'px');
             _this.css('line-height', defaultOptions.lineHeight + 'px');
             _this.addClass('jf-main');
@@ -181,7 +183,7 @@ var TimeFn = null;
             jf.show(_this);
 
             $(this).off('click');
-            $(this).on('click', '.json-toggle-btn', function() {
+            $(this).on('click', '.json-toggle-btn', function () {
                 var target = $(this).toggleClass('collapsed').siblings('ul.json-dict, ol.json-array');
                 target.toggle();
                 if (target.is(':visible')) {
@@ -194,7 +196,7 @@ var TimeFn = null;
                 return false;
             });
 
-            $(this).on('click', '.json-placeholder', function() {
+            $(this).on('click', '.json-placeholder', function () {
                 $(this).siblings('.json-toggle-btn').click();
                 return false;
             });
@@ -217,16 +219,15 @@ var TimeFn = null;
             }
 
 
-
             $('.json-key').bind('click', function () {
                 var $this = $(this);
                 // 取消上次延时未执行的方法
                 clearTimeout(TimeFn);
                 //执行延时
-                TimeFn = setTimeout(function(){
+                TimeFn = setTimeout(function () {
                     //do function在此处写单击事件要执行的代码
                     jf.copyJson($this, 'key');
-                },300);
+                }, 300);
 
             });
             $('.json-key').bind('dblclick', function () {
@@ -234,9 +235,35 @@ var TimeFn = null;
                 clearTimeout(TimeFn);
                 jf.copyJson($(this), 'value');
             });
+
+            $('.json-key').rightMenu();
         });
 
     };
 
+
+
+
+
+    $.fn.rightMenu = function () {
+
+        var _this = $(this);
+        console.log(_this)
+        $(document).mousedown(function (e) {
+            console.log(e.clientX, e.clientY)
+            if (e.which == 3) {
+                if ($.inArray(e.target,_this) != -1) {
+                    $(document).contextmenu(function(){
+                        return false;
+                    });
+                } else {
+                    $(document).contextmenu(function(){
+                        return true;
+                    });
+                }
+            }
+
+        })
+    };
 
 })(jQuery);
