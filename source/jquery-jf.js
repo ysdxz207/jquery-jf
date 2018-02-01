@@ -149,8 +149,6 @@ var TimeFn = null;
 
                 var convertJson2Arr = function (json) {
                     var arr = [];
-                    if (json instanceof Object) {
-                    }
                     $.each(json, function (k, v) {
                         if (v instanceof Object) {
                             arr.push({'key':k,'value':JSON.stringify(v)});
@@ -169,6 +167,30 @@ var TimeFn = null;
                 var arr = convertJson2Arr(jf.json);
                 var str = arr[index];
                 return str;
+            },
+            editJson: function (obj) {
+                var json = jf.findJson(obj);
+                var keyEle = $('<p>').text(json.key),
+                    valueEle = $('<textarea>').text(json.value),
+                    closeBtn = $('<button>').attr('type', 'button'),
+                    modalMain = $('<div>').attr('id', 'modal-overlay'),
+                    modalContent = $('<div>')
+                        .addClass('modal-content')
+                        .appendTo(modalMain);
+
+                modalContent.append(keyEle);
+                modalContent.append(valueEle);
+                closeBtn.bind('click', function () {
+                    showOrHideModal();
+                });
+                var showOrHideModal = function () {
+                    var e1 = document.getElementById('modal-overlay');
+                    e1.style.visibility =  (e1.style.visibility == "visible"  ) ? "hidden" : "visible";
+                };
+
+                modalMain.appendTo('body');
+
+                showOrHideModal();
             }
         }
     ;
@@ -292,6 +314,10 @@ var TimeFn = null;
                     liEdit.text('编辑对象');
                     liCopy.bind('click', function () {
                         jf.copyJson($(e.target), 'json');
+                        ul.remove();
+                    });
+                    liEdit.bind('click', function () {
+                        jf.editJson($(e.target));
                         ul.remove();
                     });
                     liCopy.appendTo(ul);
