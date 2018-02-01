@@ -112,11 +112,16 @@ ul.json-dict, ol.json-array {
     float: left;
 }
 
-.json-main .tip {
+.jf-main .tip {
     position: fixed;
-    left: 500px;
-    top: 200px;
+    left: 50%;
+    top: 40%;
     z-index: 2;
-    padding: 10px 30px;
-    border: 1px solid red;
+    padding: 10px 20px;
+    border: 1px solid #0fff99;
+    background-color: #98ffa1;
+    color: #FFFFFF;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 }
