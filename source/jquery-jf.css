@@ -125,3 +125,25 @@ ul.json-dict, ol.json-array {
     -moz-border-radius: 10px;
     border-radius: 10px;
 }
+
+.jf-main .right-menu {
+    padding: 10px 0px;
+    position: fixed;
+    z-index: 2;
+    border: 1px solid #2cfdff;
+    background-color: #90f1ffc2;
+    color: #FFFFFF;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    min-height: 80px;
+}
+
+.jf-main .right-menu li {
+    cursor: pointer;
+    padding: 2px 8px;
+}
+
+.jf-main .right-menu li:hover {
+    background-color: #fd41026b;
+}

@@ -10,6 +10,7 @@ var TimeFn = null;
         showImg: true
     };
     var jf = {
+            json: {},
             show: function (e1) {
                 e1.fadeIn(200);
             },
@@ -80,7 +81,7 @@ var TimeFn = null;
                                 var keyRepr = options.withQuotes ?
                                     '<span class="json-key" title="单击复制key,双击复制value,右键复制json">"' + key + '"</span>' : '<span class="json-key" title="单击复制key,双击复制value,右键复制json">' + key + '</span>';
                                 if (jf.isCollapsable(json[key])) {
-                                    html += '<i class="json-toggle-btn"><hr></i><span class="json-key">' + keyRepr + '</span>';
+                                    html += '<i class="json-toggle-btn"><hr></i>' + keyRepr;
                                 }
                                 else {
                                     html += keyRepr;
@@ -108,7 +109,8 @@ var TimeFn = null;
             ,
             copyJson: function (clickObj, type) {
                 var key = clickObj.text(),
-                    value = clickObj.parent().find('.json-value').text(),
+                    jsonObj = jf.findJson(clickObj),
+                    value = jsonObj['value'],
                     tempClickObj = $('<div></div>');
                 var clipboard = new Clipboard(tempClickObj[0], {
                     text: function () {
@@ -116,6 +118,9 @@ var TimeFn = null;
                             return key;
                         } else if (type === 'value') {
                             return value;
+                        } else if (type === 'json') {
+                            key = defaultOptions.withQuotes ? '"' + key + '"' : key;
+                            return key + ':' + value;
                         }
                         return key;
                     }
@@ -138,6 +143,32 @@ var TimeFn = null;
                 tipEle.appendTo('body');
                 tipEle.show(500);
                 tipEle.delay(timeout || 1000).fadeOut(500);
+            },
+            findJson: function (obj) {
+                var index = $('.json-key').index(obj);
+
+                var convertJson2Arr = function (json) {
+                    var arr = [];
+                    if (json instanceof Object) {
+                    }
+                    $.each(json, function (k, v) {
+                        if (v instanceof Object) {
+                            arr.push({'key':k,'value':JSON.stringify(v)});
+                            if (!(v instanceof Array)) {
+                                $.each(convertJson2Arr(v), function (i, o) {
+                                    arr.push(o);
+                                });
+                            }
+                        } else {
+                            arr.push({'key':k,'value':v});
+                        }
+                    });
+                    return arr;
+                };
+
+                var arr = convertJson2Arr(jf.json);
+                var str = arr[index];
+                return str;
             }
         }
     ;
@@ -155,12 +186,10 @@ var TimeFn = null;
             try {
                 json = JSON.parse(_this.text());
             } catch (e) {
-                jf.show(_this);
                 return;
             }
         }
         if (json == null) {
-            jf.show(_this);
             return;
         }
 
@@ -168,10 +197,13 @@ var TimeFn = null;
             try {
                 json = JSON.parse(json);
             } catch (e) {
+                jf.json = json;
                 jf.show(_this);
                 return;
             }
         }
+
+        jf.json = json;
         _this.html('<i class="json-toggle-btn"><hr></i><span class="json-root">ROOT</span>')
 
         return this.each(function () {
@@ -246,21 +278,30 @@ var TimeFn = null;
 
 
     $.fn.rightMenu = function () {
-
+        $(document).contextmenu(function(){
+            return false;
+        });
         var _this = $(this);
-        console.log(_this)
         $(document).mousedown(function (e) {
-            console.log(e.clientX, e.clientY)
             if (e.which == 3) {
                 if ($.inArray(e.target,_this) != -1) {
-                    $(document).contextmenu(function(){
-                        return false;
+                    var liCopy = $('<li>'),
+                        ul = $('<ul class="right-menu">');
+                    liCopy.text('复制对象');
+                    liCopy.bind('click', function () {
+                        jf.copyJson($(e.target), 'json');
+                        ul.remove();
                     });
+                    liCopy.appendTo(ul);
+                    ul.appendTo('body');
+                    ul.css('left', e.clientX + 12 + 'px');
+                    ul.css('top', e.clientY + 'px');
+                    ul.show(400);
                 } else {
-                    $(document).contextmenu(function(){
-                        return true;
-                    });
+                    $('.right-menu').remove();
                 }
+            } else if ($.inArray(e.target, $('.right-menu li')) == -1) {
+                $('.right-menu').remove();
             }
 
         })
