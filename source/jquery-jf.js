@@ -286,13 +286,16 @@ var TimeFn = null;
             if (e.which == 3) {
                 if ($.inArray(e.target,_this) != -1) {
                     var liCopy = $('<li>'),
+                        liEdit = $('<li>'),
                         ul = $('<ul class="right-menu">');
                     liCopy.text('复制对象');
+                    liEdit.text('编辑对象');
                     liCopy.bind('click', function () {
                         jf.copyJson($(e.target), 'json');
                         ul.remove();
                     });
                     liCopy.appendTo(ul);
+                    liEdit.appendTo(ul);
                     ul.appendTo('body');
                     ul.css('left', e.clientX + 12 + 'px');
                     ul.css('top', e.clientY + 'px');
