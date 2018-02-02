@@ -172,25 +172,23 @@ var TimeFn = null;
                 var json = jf.findJson(obj);
                 var keyEle = $('<p>').text(json.key),
                     valueEle = $('<textarea>').text(json.value),
-                    closeBtn = $('<button>').attr('type', 'button'),
-                    modalMain = $('<div>').attr('id', 'modal-overlay'),
+                    closeBtn = $('<button>').attr('type', 'button').text('关闭'),
+                    modalMain = $('<div>').attr('id', 'modal-mask'),
                     modalContent = $('<div>')
                         .addClass('modal-content')
                         .appendTo(modalMain);
 
                 modalContent.append(keyEle);
                 modalContent.append(valueEle);
+                modalContent.append(closeBtn);
                 closeBtn.bind('click', function () {
-                    showOrHideModal();
+                    modalMain.remove();
                 });
-                var showOrHideModal = function () {
-                    var e1 = document.getElementById('modal-overlay');
-                    e1.style.visibility =  (e1.style.visibility == "visible"  ) ? "hidden" : "visible";
+                var showModal = function () {
+                    modalMain.appendTo('body');
                 };
 
-                modalMain.appendTo('body');
-
-                showOrHideModal();
+                showModal();
             }
         }
     ;
